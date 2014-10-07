@@ -4,7 +4,7 @@
   "description": "The place where all things npm will one day be documented",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "npm run build && bin/start.sh",
     "postinstall": "npm run build",
     "build": "bin/build.sh"
   },
@@ -36,5 +36,8 @@
     "npm": "latest",
     "strftime": "^0.8.2",
     "walkdir": "0.0.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.2.1"
   }
 }
