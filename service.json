@@ -6,7 +6,8 @@
       "start": "node index.js"
     },
     "env": {
-      "PORT": "8081"
+      "PORT": "8081",
+      "NODE_ENV": "production"
     }
   },
   "docs2": {
@@ -16,7 +17,8 @@
       "start": "node index.js"
     },
     "env": {
-      "PORT": "8082"
+      "PORT": "8082",
+      "NODE_ENV": "production"
     }
   }
 }
