@@ -13,7 +13,6 @@ repository field to your package.json that points to your repo:
 
 ```js
 {
-  ..
   "repository": {
     "url": "git://github.mycompany.com/myco/mypackage.git"
   }

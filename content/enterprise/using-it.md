@@ -68,3 +68,16 @@ npm publish
 
 npm will automatically publish to your npmE, and will refuse to publish scoped
 packages to the public registry.
+
+## Creating a GitHub OAuth Token
+
+1. Visit [github.com/settings/tokens/new](https://github.com/settings/tokens/new) to create a new "Personal access token".
+1. Use a descriptive name for your token, like "myco npmE"
+1. Leave the default scopes as they are.
+1. Click "Generate Token" and you'll be redirected to a new page that displays your token. Copy the token right away, as it will only be displayed on screen once.
+1. Copy the token and paste it into the bottom of your `~/.npmrc file`:
+
+```
+@myco:registry=https://npm-registry.myco.com/
+//npm-registry.myco.com/:_authToken=YOUR_NEW_AUTH_TOKEN_HERE
+```
