@@ -71,6 +71,10 @@ packages to the public registry.
 
 ## Creating a GitHub OAuth Token
 
+If you log in to npmE from multiple machines, then you will have trouble
+logging in to npme using ordinary logins. It is tricky because of a
+limitation of GitHub auth.
+
 1. Visit [github.com/settings/tokens/new](https://github.com/settings/tokens/new) to create a new "Personal access token".
 1. Use a descriptive name for your token, like "myco npmE"
 1. Leave the default scopes as they are.
