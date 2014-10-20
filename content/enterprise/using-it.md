@@ -78,6 +78,6 @@ packages to the public registry.
 1. Copy the token and paste it into the bottom of your `~/.npmrc file`:
 
 ```
-@myco:registry=https://npm-registry.myco.com/
-//npm-registry.myco.com/:_authToken=YOUR_NEW_AUTH_TOKEN_HERE
+@myco:registry=https://npme.myco.com/
+//npme.myco.com/:_authToken=YOUR_NEW_AUTH_TOKEN_HERE
 ```
