@@ -13,7 +13,7 @@ var compact     = _.compact
 var uniq        = _.uniq
 var pluck       = _.pluck
 var merge       = _.merge
-var fm          = require("html-frontmatter")
+var frontmatter          = require("html-frontmatter")
 var contentFile = path.resolve(__dirname, "../content.json")
 
 // Flesh out the content object
@@ -25,16 +25,25 @@ var content = {
 // Walk around looking for pages
 var emitter = require("walkdir")(path.resolve(__dirname,  "../content/"))
 
-emitter.on("file", function(filename,stat){
+emitter.on("file", function(filepath,stat){
 
   // We only want markdown files
-  if (!filename.match(/\.md$/)) return
+  if (!filepath.match(/\.md$/)) return
 
-  var page = {}
-  page.content = fs.readFileSync(filename).toString()
+  var page = {
+    title: null,
+    heading: null,
+    section: null,
+    href: null,
+    filename: filepath.replace(/.*\/content\//, ""),
+    modified: null,
+    modifiedPretty: null,
+    edit_url: "https://github.com/npm/npm/edit/master/doc/api/npm-bugs.md",
+    content: fs.readFileSync(filepath).toString()
+  }
 
   // Look for HTML frontmatter
-  merge(page, fm(page.content))
+  merge(page, frontmatter(page.content))
 
   // Look for man-pagey frontmatter
   var manPattern = new RegExp("^(.*) -- (.*)\n=+\n")
@@ -45,7 +54,7 @@ emitter.on("file", function(filename,stat){
   }
 
   // Get modified date
-  page.modified = fs.statSync(filename).mtime
+  page.modified = fs.statSync(filepath).mtime
   page.modifiedPretty = strftime("%B %d, %Y", page.modified)
 
   // Titlecase some things
@@ -58,27 +67,27 @@ emitter.on("file", function(filename,stat){
   // Convert markdown to HTML
   page.content = marked(page.content)
 
-  // Remove basepath and extension from filename
-  filename = filename
-    .replace(/.*\/content\//, "")
+  // Infer section from top directory
+  if (page.filename.match(/\//))
+    page.section = page.filename.split("/")[0]
+
+  // IN what repository does this doc live?
+  if (["api", "cli", "files", "misc"].indexOf(page.section) > -1) {
+    page.edit_url = "https://github.com/npm/npm/edit/master/doc/" + page.filename
+  } else if (page.section === "policies") {
+    page.edit_url = "https://github.com/npm/policies/edit/master/" + path.basename(page.filename)
+  } else if (page.section) {
+    page.edit_url = "https://github.com/npm/docs.npmjs.com/edit/master/content/" + page.filename
+  }
+
+  page.href = "/" + page.filename
+    .replace(/\/npm-/, "/")
     .replace(/\.md$/, "")
 
   // Use filename as title if not specified in frontmatter
-  // (and remove superfluous npm- prefix)
-  if (!page.title)
-    page.title = path.basename(filename).replace(/^npm-/, "")
-
-  // Infer section from top directory
-  if (filename.match(/\//))
-    page.section = filename.split("/")[0]
-
-  if (["api", "cli", "files", "misc"].indexOf(page.section) > -1) {
-    page.edit_url = "https://github.com/npm/npm/edit/master/doc/" + filename + ".md"
-  } else if (page.section) {
-    page.edit_url = "https://github.com/npm/docs.npmjs.com/edit/master/content/" + filename + ".md"
+  if (!page.title) {
+    page.title = path.basename(page.href)
   }
-
-  page.href = "/" + filename.replace(/\/npm-/, "/")
 
   content.pages.push(page)
 
