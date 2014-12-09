@@ -1,4 +1,10 @@
-## npm install npmE
+<!--
+order: 3
+title: Installation
+featured: true
+-->
+
+# Installing npm Enterprise
 
 npmE runs locally, on a server you control, with no external dependencies
 (mirroring the public registry of course requires external internet access, but

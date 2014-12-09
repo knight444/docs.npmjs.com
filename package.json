@@ -8,6 +8,7 @@
     "postinstall": "npm run build",
     "build": "bin/build.sh",
     "pretest": "npm run build",
+    "prestart": "npm run build",
     "test": "mocha"
   },
   "repository": {
@@ -42,6 +43,7 @@
     "walkdir": "0.0.7"
   },
   "devDependencies": {
+    "cheerio": "^0.18.0",
     "mocha": "^1.21.4",
     "nodemon": "^1.2.1",
     "supertest": "^0.14.0"

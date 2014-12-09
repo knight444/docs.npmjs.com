@@ -1,9 +1,10 @@
 <!--
+order: 2
 title: Requirements
 -->
 
 
-## npmE installation requirements
+# npmE installation requirements
 
 npmE has been extensively tested on CentOS 6.5 and Ubuntu 14 (Trusty), and is
 supported on most recent public Linux distributions. It can run inside a
@@ -30,12 +31,14 @@ about it.
 
 ## Latest version of npm
 
-The version of npm compatible with npm Enterprise is still in beta, so it
-is not yet bundled with node. To get it, run
+To use npm Enterprise you need a recent version of the npm client (better than 
+2.x). To get it, run
 
 ```bash
-sudo npm install npm@2.0.0 -g
+sudo npm install npm -g
 ```
+
+(depending on your local setup, you may be able to omit sudo)
 
 ## Hardware requirements
 

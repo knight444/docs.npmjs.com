@@ -8,12 +8,13 @@ var fs          = require("fs")
 var marked      = require("marked")
 var fmt         = require("util").format
 var strftime    = require("strftime")
+var cheerio     = require("cheerio")
 var _           = require("lodash")
 var compact     = _.compact
 var uniq        = _.uniq
 var pluck       = _.pluck
 var merge       = _.merge
-var frontmatter          = require("html-frontmatter")
+var frontmatter = require("html-frontmatter")
 var contentFile = path.resolve(__dirname, "../content.json")
 
 // Flesh out the content object
@@ -67,11 +68,32 @@ emitter.on("file", function(filepath,stat){
   // Convert markdown to HTML
   page.content = marked(page.content)
 
+  // Wrap YouTube videos so they can be styled.
+  var $ = cheerio.load(page.content)
+  $('iframe[src*="youtube.com"]').each(function(i, elem) {
+    $(this).removeAttr("width")
+    $(this).removeAttr("height")
+    $(this).before(fmt("<div class='youtube-video'>%s</div>", $(this).toString()));
+    $(this).remove()
+  });
+
+  page.content = $.html()
+
+  // Remove basepath and extension from filename
+  filename = filename
+    .replace(/.*\/content\//, "")
+    .replace(/\.md$/, "")
+
+  // Use filename as title if not specified in frontmatter
+  // (and remove superfluous npm- prefix)
+  if (!page.title)
+    page.title = path.basename(filename).replace(/^npm-/, "")
+
   // Infer section from top directory
   if (page.filename.match(/\//))
     page.section = page.filename.split("/")[0]
 
-  // IN what repository does this doc live?
+  // In what repository does this doc live?
   if (["api", "cli", "files", "misc"].indexOf(page.section) > -1) {
     page.edit_url = "https://github.com/npm/npm/edit/master/doc/" + page.filename
   } else if (page.section === "policies") {
@@ -84,11 +106,6 @@ emitter.on("file", function(filepath,stat){
     .replace(/\/npm-/, "/")
     .replace(/\.md$/, "")
 
-  // Use filename as title if not specified in frontmatter
-  if (!page.title) {
-    page.title = path.basename(page.href)
-  }
-
   content.pages.push(page)
 
 })
@@ -96,6 +113,7 @@ emitter.on("file", function(filepath,stat){
 
 emitter.on("end",function(){
 
+  // Sort pages by title
   content.pages = _.sortBy(content.pages, function(page) {
     return page.title.toLowerCase();
   })
