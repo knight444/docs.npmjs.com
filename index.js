@@ -9,6 +9,7 @@ var isNumber = require("lodash").isNumber
 var sortBy = require("lodash").sortBy
 var any = require("lodash").any
 var suggest = require(__dirname + "/lib/suggestions")
+var renames = require(__dirname + "/lib/renames")
 
 // Load section and page data
 var content = require(path.resolve(__dirname, "content.json"))
@@ -86,6 +87,9 @@ app.get("/*", function(req, res) {
   })
 
   if (!page) {
+
+    // TODO: Look in renames
+
     return res.status(404).render("404", {
       url: req.url,
       pageId: "fourohfour",
